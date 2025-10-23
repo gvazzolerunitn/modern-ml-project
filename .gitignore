@@ -1,0 +1,19 @@
+# Escludi tutti i CSV dentro project/data/
+project/data/*.csv
+
+# Escludi cartelle e file temporanei di CatBoost
+project/advanced/catboost_info/
+project/advanced/tmp/
+project/advanced/test/
+project/advanced/learn/
+
+# Escludi altri file temporanei comuni (personalizza se ci sono altre cartelle o estensioni)
+*.tmp
+*.log
+*.tsv
+
+# Esempio: escludi anche la cartella models/ se contiene solo oggetti temporanei
+# models/
+
+# escludi file di configurazione locali
+.vscode/*
