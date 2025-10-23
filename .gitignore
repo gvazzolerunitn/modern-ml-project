@@ -1,5 +1,5 @@
 # Escludi tutti i CSV dentro project/data/
-project/data/*.csv
+project/data/*
 
 # Escludi cartelle e file temporanei di CatBoost
 project/advanced/catboost_info/
