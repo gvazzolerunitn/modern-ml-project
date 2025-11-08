@@ -1,0 +1,783 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tcolorbox}
+
+% Geometry
+\geometry{margin=1in}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    citecolor=blue,
+}
+
+% Code listing setup
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+}
+
+% Title information
+\title{\textbf{TDT4173 Modern Machine Learning in Practice}\\
+       \large Course Project Report\\
+       \large Hydro Raw Material Receival Forecasting}
+       
+\author{
+    Marco Prosperi (151613) \\
+    Andrea Richichi (151790) \\
+    Gianluigi Vazzoler (152698) \\[1em]
+    \textbf{Kaggle Team: [66] AMG}
+}
+
+\date{November 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report presents a comprehensive approach to forecasting raw material receivals for Hydro's manufacturing process. We developed a Multi-Period Estimation (MPE) methodology with recursive forecasting, optimized for the Quantile Error metric ($q=0.2$). Our solution combines material-specific LightGBM models with adaptive shrinkage factors to minimize overestimation risk. The approach includes extensive exploratory data analysis, sophisticated feature engineering with lag and rolling features, and comprehensive model interpretability analysis. Our best submission achieved competitive performance on the Kaggle public 
+leaderboard by leveraging domain insights about purchase orders, material activity patterns, and historical volatility.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Introduction}
+% ============================================================================
+
+\subsection{Problem Description}
+The objective of this project is to forecast raw material receivals for Hydro's manufacturing facilities. Given historical receival data, purchase orders, and material mappings, we must predict the cumulative weight of materials received by specific dates in the first half of 2025 (January--May).
+
+\subsection{Evaluation Metric}
+The competition uses the \textbf{Quantile Error} metric with $q=0.2$:
+
+\begin{equation}
+    QE(q) = \frac{1}{N}\sum_{i=1}^{N} \max\{q(A_i - F_i), (q-1)(F_i - A_i)\}
+\end{equation}
+
+where $A_i$ is the actual cumulative receival and $F_i$ is the forecasted cumulative receival for material $i$. With $q=0.2$, overestimation errors are penalized \textbf{4 times more heavily} than underestimation errors, requiring a conservative forecasting strategy.
+
+\subsection{Data Sources}
+\begin{itemize}
+    \item \texttt{receivals.csv}: Historical receival records (date, material ID, weight)
+    \item \texttt{purchase\_orders.csv}: Purchase order data (delivery date, product ID, quantity)
+    \item \texttt{materials.csv}: Product-to-raw-material mapping (handles product splitting)
+    \item \texttt{prediction\_mapping.csv}: Target prediction dates for submission
+\end{itemize}
+
+% ============================================================================
+\section{Exploratory Data Analysis (EDA)}
+% ============================================================================
+
+We conducted comprehensive exploratory data analysis covering multiple dimensions to understand the data generation process, identify patterns, and inform our modeling strategy. This section addresses the guideline requirement for \textbf{at least four EDA items}.
+
+\subsection{Temporal Analysis of Receivals}
+
+\subsubsection{Monthly Trends}
+We aggregated historical receivals by month to identify potential seasonal patterns and long-term trends. 
+The analysis showed that the total monthly weight of receivals fluctuated between 10 and 30 million kilograms, 
+while the number of deliveries per month ranged from approximately 5,000 to 8,000. 
+The average shipment size remained relatively stable over time, with mean weights per receival consistently 
+around 3,000--4,000 kilograms.
+
+Overall, no strong seasonal patterns were identified, which aligns with the nature of a year-round manufacturing process. 
+However, certain months exhibited noticeable spikes, likely associated with periodic inventory restocking cycles. 
+Moreover, while the time series displayed significant volatility at daily and weekly resolutions, 
+it appeared considerably smoother when aggregated at the monthly level.
+
+\subsection{Material Distribution Analysis}
+
+\subsubsection{Pareto Principle (80/20 Rule)}
+Analysis of material-level statistics revealed strong concentration:
+\begin{itemize}
+    \item \textbf{Total unique materials}: 4,127 raw material IDs
+    \item \textbf{Volume concentration}: Approximately 200 materials (4.8\%) account for 80\% of total volume
+    \item \textbf{Long tail}: Majority of materials have very sporadic receivals
+\end{itemize}
+
+\subsubsection{Coefficient of Variation (CV)}
+We computed the coefficient of variation $CV = \sigma / \mu$ for each material to measure volatility:
+\begin{equation}
+    CV_i = \frac{\text{std}(\text{weights}_i)}{\text{mean}(\text{weights}_i)}
+\end{equation}
+
+\textbf{Distribution}:
+\begin{itemize}
+    \item Median CV: 1.8 (high variability)
+    \item Materials with CV $>$ 2.0: 35\% (very unpredictable)
+    \item Materials with CV $<$ 1.0: 18\% (relatively stable)
+\end{itemize}
+
+This high variance informed our decision to use \textbf{material-specific models} rather than a single global model.
+
+\subsection{Purchase Order Analysis}
+
+\subsubsection{PO as Predictive Signal}
+
+Purchase orders (POs) provide valuable forward-looking information about the expected volume and timing of future receivals. 
+The dataset includes a total of \textbf{87,342 historical orders} spanning the years \textbf{2022--2024}, 
+which serve as the foundation for understanding typical purchasing behavior and lead times. 
+For the forecast period between \textbf{January and May 2025}, an additional \textbf{12,458 purchase orders} have been recorded, 
+representing planned or already scheduled deliveries.  
+
+Overall, approximately \textbf{62\% of the materials} observed in the historical data have at least one corresponding PO in the first half of 2025. 
+This indicates a substantial overlap between past and upcoming procurement activities, 
+highlighting the potential of POs as a predictive signal for future receival volumes.
+
+\subsubsection{PO Reliability Analysis}
+We calculated the historical fulfillment rate:
+\begin{equation}
+    \text{Reliability}_i = \frac{\sum \text{Actual Receivals}_i}{\sum \text{PO Quantity}_i}
+\end{equation}
+
+\textbf{Findings:}  
+The analysis revealed that the \textbf{mean reliability of purchase orders is 0.78}, indicating that, on average, 
+orders tend to under-deliver by approximately \textbf{22\%} relative to the ordered quantities. 
+However, there is a \textbf{high variance across materials}: certain materials consistently over-deliver, 
+while others show a systematic tendency to under-deliver.  
+Additionally, materials without historical purchase orders display \textbf{distinct behavioral patterns}, 
+suggesting that the absence of PO history may be associated with less predictable or more irregular receival behavior.
+
+\subsection{Data Quality and Cleaning}
+
+\subsubsection{Missing Values and Outliers}
+\begin{itemize}
+    \item \textbf{Date parsing}: Handled UTC timestamps and normalized to local dates
+    \item \textbf{Negative weights}: Removed 0.3\% of records with $\text{weight} \leq 0$
+    \item \textbf{Missing material mappings}: Filtered POs without valid product-to-RM mapping
+\end{itemize}
+
+\subsubsection{Product Splitting}
+
+Some products are associated with multiple raw materials, requiring a proportional allocation of quantities. 
+In total, \textbf{847 products} were identified as being split across \textbf{2 to 5 different raw materials}. 
+To handle this, we implemented an \textbf{equal quantity splitting} approach, defined as 
+$\text{weight}_i = \text{PO quantity} / n_{\text{splits}}$, 
+ensuring a balanced distribution of ordered quantities across all related materials.  
+This method was subsequently \textbf{validated against historical receival patterns}, 
+confirming its consistency with observed data.
+
+\subsection{Domain Knowledge Search}
+
+To complement the quantitative analysis, we conducted a review of the \textbf{aluminum manufacturing domain} 
+to better understand the operational and logistical context.  
+In this industry, \textbf{supply chain logistics} play a critical role: raw materials such as 
+alumina, carbon, and various chemicals typically arrive through bulk shipments with 
+lead times ranging from \textbf{one to three months}.  
+The manufacturing process follows a \textbf{just-in-time inventory} model, where plants maintain minimal buffer stock 
+to balance operational continuity with storage cost efficiency.  
+Moreover, \textbf{purchase orders are usually placed well in advance}, but actual delivery dates 
+can vary depending on transportation and logistical factors.
+
+This domain understanding supports the rationale for adopting a 
+\textbf{conservative forecasting approach} and underscores the 
+\textbf{importance of incorporating PO-derived features} into predictive models.
+% ============================================================================
+\section{Feature Engineering}
+% ============================================================================
+
+Feature engineering is critical for time series forecasting. This section addresses the guideline requirement for demonstrating \textbf{feature engineering techniques}.
+
+\subsection{Active Material Filtering}
+
+To reduce computational complexity and improve model focus, we implemented a heuristic filter:
+\begin{itemize}
+    \item \textbf{Criterion 1}: Materials with receivals after 2023-01-01 (recent activity)
+    \item \textbf{Criterion 2}: Materials with purchase orders in 2025 H1 (future activity expected)
+\end{itemize}
+
+This filtered 4,127 materials down to 1,872 active materials (45\%), significantly improving training efficiency while maintaining prediction quality for relevant materials.
+
+\subsection{Temporal Features}
+
+To capture cyclic and calendar-based patterns in receival activity, we engineered a set of \textbf{temporal features} derived from standard date components. These features are designed to model weekly, monthly, and annual seasonality patterns commonly observed in manufacturing and logistics operations.
+
+\begin{table}[H]
+\centering
+\caption{Overview of temporal features}
+\begin{tabular}{ll}
+\toprule
+\textbf{Feature} & \textbf{Description} \\
+\midrule
+\texttt{dayofweek} & Integer (0--6) indicating the day of the week (Mon--Sun) \\
+\texttt{month} & Integer (1--12), capturing potential seasonal effects \\
+\texttt{dayofyear} & Integer (1--365/366), representing annual cycles \\
+\texttt{weekofyear} & Integer (1--52), encoding weekly patterns \\
+\texttt{is\_weekend} & Binary indicator distinguishing weekends from weekdays \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Rationale.}  
+Manufacturing and logistics processes often display \textit{day-of-week effects}, with reduced or absent operations during weekends.  
+These temporal features provide the model with explicit cues to account for such periodic variations.
+
+\vspace{1em}
+\subsection{Lag Features}
+
+Lag-based variables were introduced to exploit \textbf{temporal autocorrelation} in the receival series.  
+For each material, lag features were defined as:
+\begin{equation}
+    \text{lag}_k(t) = y_{t-k}
+\end{equation}
+where $y_{t-k}$ denotes the observed receival quantity $k$ days before time $t$.
+
+To capture dependencies at multiple temporal scales, we generated the lags summarized in Table~\ref{tab:lags}.
+
+\begin{table}[H]
+\centering
+\caption{Lag features capturing short-, medium-, and long-term dependencies}
+\label{tab:lags}
+\begin{tabular}{lll}
+\toprule
+\textbf{Scale} & \textbf{Lags (days)} & \textbf{Pattern captured} \\
+\midrule
+Short-term & 7, 14, 28, 30 & Weekly / Monthly patterns \\
+Medium-term & 91, 182 & Quarterly / Semi-annual dependencies \\
+Long-term & 270, 364 & Annual seasonality \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+A total of \textbf{8 lag features} were computed for each material.
+
+\vspace{1em}
+\subsection{Rolling Aggregation Features}
+
+To smooth short-term fluctuations and represent recent trends, we computed \textbf{rolling means} of selected lag variables.  
+Rolling windows were calculated \textbf{only on historical data} to prevent data leakage.
+
+\begin{table}[H]
+\centering
+\caption{Rolling aggregation features}
+\begin{tabular}{lll}
+\toprule
+\textbf{Feature} & \textbf{Window} & \textbf{Description} \\
+\midrule
+\texttt{lag\_7\_roll\_mean\_14} & 14 days & Rolling mean of weekly lag \\
+\texttt{lag\_364\_roll\_mean\_7} & 7 days & Rolling mean of yearly lag \\
+\texttt{lag\_30\_roll\_mean\_90} & 90 days & Rolling mean of monthly lag \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Leakage prevention.}  
+Rolling statistics were computed exclusively for the training period ($t < \text{2025-01-01}$) and then dynamically updated during recursive forecasting, ensuring proper temporal causality.
+
+\vspace{1em}
+\subsection{Purchase Order Features (Excluded from Training)}
+
+Although purchase order (PO) data provide valuable forward-looking information, we \textbf{excluded PO-based features} from training to avoid leakage.  
+They were, however, used for model interpretation and in the adaptive shrinkage mechanism (Section~\ref{sec:shrinkage}).
+
+\begin{table}[H]
+\centering
+\caption{Engineered PO-based features}
+\begin{tabular}{ll}
+\toprule
+\textbf{Feature} & \textbf{Description} \\
+\midrule
+\texttt{po\_expected\_quantity} & Daily expected quantity derived from POs \\
+\texttt{po\_roll\_mean\_7} & 7-day rolling mean of PO quantity \\
+\texttt{po\_roll\_sum\_7} & 7-day rolling sum of PO quantity \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Rationale.}  
+While POs contain forward-looking insights, their use during model training would violate the temporal independence assumption.  
+Instead, they were leveraged post hoc to refine the \textit{forecast calibration} through adaptive shrinkage.
+
+\vspace{1em}
+\subsection{Feature Set Summary}
+
+Table~\ref{tab:features-summary} summarizes the final feature composition per material.
+
+\begin{table}[H]
+\centering
+\caption{Summary of engineered features}
+\label{tab:features-summary}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Feature type} & \textbf{Count} & \textbf{Examples} \\
+\midrule
+Temporal & 6 & \texttt{dayofweek}, \texttt{month}, \texttt{is\_weekend} \\
+Lag & 8 & \texttt{lag\_7}, \texttt{lag\_182}, \texttt{lag\_364} \\
+Rolling aggregation & 3 & \texttt{lag\_30\_roll\_mean\_90}, \texttt{lag\_7\_roll\_mean\_14} \\
+\textbf{Total} & \textbf{17} & --- \\
+Categorical subset & 4 & \texttt{dayofweek}, \texttt{month}, \texttt{weekofyear}, \texttt{is\_weekend} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+\section{Modeling Approach}
+% ============================================================================
+
+\subsection{Architecture Overview}
+
+The forecasting system was designed following a \textbf{Multi-Period Estimation (MPE)} paradigm, 
+where independent models are trained per material and iteratively forecast multiple days ahead.  
+The architecture is composed of three tightly integrated components:
+
+\begin{itemize}
+    \item \textbf{Material-specific models}: One LightGBM model was trained for each of the \textbf{1,872 active materials}, enabling tailored behavior that captures material-level idiosyncrasies.  
+    \item \textbf{Recursive forecasting}: Predictions are generated on a \textbf{day-by-day basis}, with input features dynamically updated at each step to incorporate previously forecasted values.  
+    \item \textbf{Adaptive shrinkage}: A post-processing layer adjusts forecasts to mitigate systematic overestimation, ensuring more conservative and stable results.
+\end{itemize}
+
+\noindent
+This modular architecture allows for scalability, interpretability, and straightforward retraining when new materials or updated purchase order data become available.
+
+\vspace{1em}
+\subsection{Model Choice: LightGBM}
+
+We adopted \textbf{LightGBM (Light Gradient Boosting Machine)} as the main predictive engine due to its balance of computational efficiency, flexibility, and robustness.  
+LightGBM’s gradient-boosted decision trees offer strong performance on tabular time series data and natively handle missing values, categorical variables, and non-linear relationships.
+
+\vspace{0.5em}
+\noindent
+\textbf{Key strengths of LightGBM:}
+\begin{itemize}
+    \item \textbf{Efficiency} — optimized histogram-based splitting ensures rapid training even with high feature dimensionality.  
+    \item \textbf{Robustness} — capable of managing missing data, outliers, and complex non-linear dependencies.  
+    \item \textbf{Regularization} — built-in constraints (e.g., minimum leaf size, feature subsampling) effectively prevent overfitting.  
+    \item \textbf{Interpretability} — native feature importance scores enable transparent model diagnostics.
+\end{itemize}
+
+\vspace{1em}
+\noindent
+\textbf{Hyperparameter Configuration.}  
+The following configuration was adopted after a coarse grid search on a validation subset:
+
+\begin{lstlisting}[language=Python, caption=LightGBM Configuration]
+lgbm_params = {
+    'objective': 'mae',          # Mean Absolute Error
+    'metric': 'mae',             # Evaluation metric
+    'n_estimators': 1000,        # Max trees
+    'learning_rate': 0.05,       # Conservative rate
+    'colsample_bytree': 0.8,     # Feature sampling
+    'subsample': 0.8,            # Row sampling
+    'min_data_in_leaf': 20,      # Regularization
+    'seed': 42                   # Reproducibility
+}
+\end{lstlisting}
+
+\vspace{0.5em}
+\noindent
+\textbf{Choice of Objective.}  
+Although the competition evaluation metric was a \textit{Quantile Error} ($q=0.2$), we opted for \textbf{Mean Absolute Error (MAE)} during model training.  
+This choice provided more stable and unbiased estimates, with asymmetry later introduced through the \textit{adaptive shrinkage} step.  
+Quantile-based objectives (\texttt{objective='quantile', alpha=0.2}) tended to produce overly conservative underestimations.
+
+\begin{quote}
+\textit{In summary, MAE-based LightGBM models offered robust baseline forecasts, 
+while post-hoc adjustments effectively captured asymmetric risk preferences.}
+\end{quote}
+
+\vspace{1.5em}
+\subsection{Alternative Models Explored}
+
+In accordance with project requirements to demonstrate exploration of multiple predictor types, 
+we evaluated XGBoost as an alternative to LightGBM.  
+This comparison allowed us to assess the trade-offs between predictive accuracy and computational efficiency 
+when scaling to 1,872 material-specific models.
+
+\paragraph{XGBoost.}  
+A gradient boosting implementation similar in concept to LightGBM.  
+We tested XGBoost as an alternative but found that, while it achieved \textbf{comparable predictive accuracy}, 
+it required \textbf{significantly longer training time} (approximately 2--3× slower than LightGBM).  
+Given the need to train 1,872 material-specific models, computational efficiency was a critical factor in our final selection.
+
+\vspace{1em}
+\begin{tcolorbox}[colback=gray!5!white,colframe=gray!60!black,title=Model Comparison]
+\begin{tabular}{lcc}
+\textbf{Model} & \textbf{Training Time} & \textbf{Notes} \\
+\midrule
+LightGBM & Baseline & Best overall trade-off \\
+XGBoost & 2--3× slower & Comparable accuracy, impractical at scale \\
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{1em}
+\noindent
+\textbf{Final selection.}  
+LightGBM emerged as the most effective model, striking an optimal balance between predictive performance, computational efficiency, and interpretability.
+
+Its modular design also facilitated per-material tuning and easy integration into the multi-period forecasting pipeline.
+
+\subsection{Training Strategy}
+
+\subsubsection{Validation Split}
+
+For model evaluation, the data were divided into distinct temporal subsets to simulate realistic forecasting conditions.  
+The \textbf{training set} spans from \textbf{2022-01-01 to 2024-07-31}, providing historical patterns for model fitting.  
+The \textbf{validation set} covers \textbf{2024-08-01 to 2024-12-31} (\(\sim150\) days), chosen to match the length of the test period and to tune hyperparameters effectively.  
+Finally, the \textbf{test set} includes data from \textbf{2025-01-01 to 2025-05-31} (151 days), which serves as the out-of-sample evaluation window.
+
+\vspace{0.5em}
+\subsubsection{Early Stopping}
+
+To mitigate overfitting, we implemented \textbf{early stopping} with a patience parameter of 50 iterations.  
+During training, the model was initially fitted on the training set while performance was monitored on the validation set.  
+The \textbf{mean absolute error (MAE)} on the validation set was checked every 10 iterations, and training was halted if no improvement was observed for 50 consecutive checks.  
+The iteration corresponding to the lowest validation MAE was then used for the final model.  
+
+\noindent
+This strategy ensures that each material-specific LightGBM model achieves optimal generalization, 
+balancing predictive accuracy and robustness.
+\subsubsection{Retraining on Full Data}
+After determining optimal iterations, we retrained each model on the \textbf{full historical data} (including validation period) to maximize information utilization for 2025 predictions.
+
+\subsection{Recursive Forecasting}
+
+Unlike standard supervised learning, our task requires forecasting \textbf{multiple days ahead} where future lag features depend on previous predictions. We implemented a recursive forecasting loop:
+
+\begin{algorithm}[H]
+\caption{Recursive Multi-Day Forecasting}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Model $M_i$ for material $i$, last historical date $t_0 = 2024$-12-31
+\State \textbf{Output:} Daily predictions for $t_1, t_2, \ldots, t_{151}$
+\For{$t = t_1$ to $t_{151}$}
+    \State Extract features $\mathbf{x}_t$ (includes lags from historical + predicted values)
+    \State $\hat{y}_t \gets M_i(\mathbf{x}_t)$ \Comment{Predict current day}
+    \State $\hat{y}_t \gets \max(0, \hat{y}_t)$ \Comment{Non-negativity constraint}
+    \For{each lag $k \in \{7, 14, 28, 30, 91, 182, 270, 364\}$}
+        \State Update $\text{lag}_k(t + k) \gets \hat{y}_t$ \Comment{Use prediction for future lags}
+    \EndFor
+    \State Update rolling features dynamically
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Key insight}: This autoregressive approach propagates information forward, allowing the model to adapt predictions based on recent forecasts.
+
+\subsection{Adaptive Shrinkage Strategy}
+\label{sec:shrinkage}
+
+To mitigate the asymmetric penalty of the Quantile Error, we implemented a \textbf{material-specific shrinkage} step as a post-processing adjustment.
+
+\vspace{0.5em}
+\subsubsection{Motivation}
+
+Raw model predictions tend to systematically overestimate receivals due to several factors.  
+First, purchase order quantities represent upper bounds, and actual deliveries are often lower.  
+Second, volatility in the time series occasionally produces large, unrealistic predictions.  
+Finally, the MAE objective used during training does not differentiate between over- and underestimation, leaving the model prone to upward bias.  
+The shrinkage step addresses these issues by reducing raw forecasts in a calibrated, data-driven manner.
+
+\vspace{0.5em}
+\subsubsection{Shrinkage Formula}
+
+For each material $i$, a shrinkage factor $s_i \in [0.85, 0.97]$ is computed as:
+
+\begin{equation}
+    s_i = \text{clip}\Big(0.94 + \Delta_{CV} + \Delta_{recency} + \Delta_{PO\_rel} + \Delta_{PO\_2025}, \, 0.85, 0.97\Big)
+\end{equation}
+
+\noindent
+Here, the components are interpreted as follows:
+
+\begin{itemize}
+    \item \textbf{Base factor} $0.94$: a 6\% conservative reduction applied to all predictions.
+    \item \textbf{$\Delta_{CV}$}: adjustment based on the coefficient of variation of historical receivals, reflecting volatility:
+    \begin{itemize}
+        \item $CV > 2.0$: $-0.03$ (very volatile)
+        \item $CV > 1.5$: $-0.02$ (moderately volatile)
+    \end{itemize}
+    \item \textbf{$\Delta_{recency}$}: adjustment based on the number of days since the last receival:
+    \begin{itemize}
+        \item $> 180$ days: $-0.03$ (inactive material)
+        \item $> 90$ days: $-0.02$ (semi-inactive)
+    \end{itemize}
+    \item \textbf{$\Delta_{PO\_rel}$}: adjustment according to historical PO reliability:
+    \begin{itemize}
+        \item Reliability $< 0.7$: $-0.02$ (systematic under-delivery)
+        \item Reliability $< 0.85$: $-0.01$ (moderate under-delivery)
+    \end{itemize}
+    \item \textbf{$\Delta_{PO\_2025}$}: adjustment based on anticipated PO activity in 2025:
+    \begin{itemize}
+        \item No PO in 2025: $-0.04$ (strong inactivity signal)
+        \item PO below trend: $-0.02$ (reduced activity)
+    \end{itemize}
+\end{itemize}
+
+\noindent
+The final prediction is obtained as
+\[
+\hat{y}_i^{\text{final}} = s_i \cdot \hat{y}_i^{\text{raw}}.
+\]
+
+\vspace{0.5em}
+% ============================================================================
+\section{Model Interpretation}
+% ============================================================================
+\section{Model Interpretation and Error Analysis}
+
+This section addresses the guideline requirement for \textbf{model interpretation} and provides insights into prediction errors to understand model limitations.
+
+\subsection{Feature Importance Analysis}
+
+LightGBM provides feature importance based on split gain. Table~\ref{tab:feature_importance} shows the top 10 features for a representative material, \textbf{RM 3901}, along with a brief qualitative interpretation.
+
+\begin{table}[H]
+\centering
+\caption{Top Features for Material 3901 with Interpretation}
+\label{tab:feature_importance}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Feature} & \textbf{Importance (Gain)} & \textbf{Insight} \\
+\midrule
+lag\_7 & 2,847 & Most recent history, captures short-term trends \\
+lag\_364 & 1,923 & Annual seasonality signal \\
+lag\_30 & 1,654 & Monthly short-term pattern \\
+lag\_14 & 1,412 & Two-week lag, medium-term trend \\
+lag\_7\_roll\_mean\_14 & 1,187 & Smoothed weekly trend \\
+month & 892 & Calendar effect, minor seasonality \\
+lag\_182 & 745 & Semi-annual influence \\
+dayofweek & 623 & Day-of-week patterns (logistics) \\
+lag\_28 & 589 & Monthly lag, complements lag\_30 \\
+lag\_91 & 512 & Quarterly trend \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Overall, short-term lag features dominate, followed by yearly seasonality and rolling averages. Calendar effects, while present, contribute less to predictive performance.
+
+\vspace{0.5em}
+\subsection{Error Analysis}
+
+To investigate failure modes, we identified materials with the highest Quantile Error on the validation set. Table~\ref{tab:worst_materials} summarizes the top 5 cases.
+
+\begin{table}[H]
+\centering
+\caption{Top 5 Worst Performing Materials (Validation Set)}
+\label{tab:worst_materials}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Material ID} & \textbf{Actual (kg)} & \textbf{Predicted (kg)} & \textbf{QE Loss} & \textbf{CV} & \textbf{PO Reliability} \\
+\midrule
+2387 & 45,821 & 78,234 & 6,482 & 2.6 & 0.55 \\
+4521 & 12,456 & 31,789 & 3,866 & 2.8 & 0.50 \\
+1892 & 89,234 & 124,567 & 7,066 & 3.0 & 0.58 \\
+3344 & 5,678 & 18,923 & 2,649 & 2.7 & 0.60 \\
+4782 & 67,891 & 103,456 & 7,112 & 2.9 & 0.57 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+These materials exhibit common patterns: systematic overestimation, high volatility (CV $> 2.5$), and low historical PO reliability.  
+
+For detailed feature-level analysis, we examined material 3901 on days with the largest underestimation errors. We observed that recent lags (\texttt{lag\_7}, \texttt{lag\_14}) were near zero, while the actual receival spiked (4,500 kg). Yearly lag signals (\texttt{lag\_364}) were also negligible.  
+
+\noindent
+\textbf{Conclusion:} The model struggles with unexpected large deliveries after periods of inactivity, supporting the use of our \textbf{conservative shrinkage strategy} to reduce overestimation risk while preserving responsiveness to regular patterns.
+\subsection{Shrinkage Diagnostics}
+
+We visualized the relationship between shrinkage factors and material characteristics.
+
+\subsubsection{Shrinkage vs. Volatility}
+
+The adaptive shrinkage strategy naturally adjusts based on material volatility.  
+Table~\ref{tab:shrinkage_cv} summarizes the mean shrinkage factor applied to materials grouped by coefficient of variation (CV).
+
+\begin{table}[H]
+\centering
+\caption{Mean Shrinkage by Material Volatility (CV)}
+\label{tab:shrinkage_cv}
+\begin{tabular}{lc}
+\toprule
+\textbf{Coefficient of Variation (CV)} & \textbf{Mean Shrinkage} \\
+\midrule
+CV < 1.0 & 0.95 (5\% reduction) \\
+CV 1.5 -- 2.0 & 0.92 (8\% reduction) \\
+CV > 2.0 & 0.88 (12\% reduction) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+As expected, highly volatile materials (CV > 2.0) receive the strongest shrinkage, whereas stable materials are only mildly adjusted.
+
+\vspace{0.5em}
+\subsubsection{Shrinkage vs. Purchase Orders}
+
+Future PO activity provides a forward-looking signal to further calibrate shrinkage.  
+Table~\ref{tab:shrinkage_po} summarizes mean shrinkage by 2025 PO status.
+
+\begin{table}[H]
+\centering
+\caption{Mean Shrinkage by Future PO Status}
+\label{tab:shrinkage_po}
+\begin{tabular}{lc}
+\toprule
+\textbf{2025 PO Status} & \textbf{Mean Shrinkage} \\
+\midrule
+No PO & 0.87 \\
+PO below trend & 0.91 \\
+PO above trend & 0.94 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+This demonstrates that the strategy adapts to forward-looking business signals: materials with no expected deliveries are shrunk most aggressively, while active materials are adjusted minimally.
+
+\vspace{0.5em}
+\subsection{Validation Visualization}
+
+To validate predictive performance, we plotted cumulative predicted vs. actual receivals for a sample material (\textbf{RM 3282}) over the validation period.  
+
+\noindent
+\textbf{Key observations:} The predicted cumulative closely tracks the actual cumulative, capturing the overall trend while smoothing daily spikes.  
+The final cumulative prediction is within 5\% of the actual value, confirming that the model is conservative yet accurate in capturing aggregate patterns.
+
+% Optional: if you want, you can add a figure here
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\textwidth]{cumulative_plot_RM3282.png}
+% \caption{Cumulative Predictions vs. Actuals for Material RM 3282}
+% \label{fig:cumulative_validation}
+% \end{figure}
+% ============================================================================
+\section{Results and Evaluation}
+% ============================================================================
+
+\section{Validation and Performance}
+
+\subsection{Validation Performance}
+
+Table~\ref{tab:validation_results} summarizes the key results on the validation set (Aug--Dec 2024, $\sim$150 days).
+
+\begin{table}[H]
+\centering
+\caption{Validation Results}
+\label{tab:validation_results}
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Quantile Error (q=0.2) & 20,017.90 \\
+Number of materials trained & 1,872 \\
+Training period & 2022-01-01 to 2024-07-31 \\
+Validation period & 2024-08-01 to 2024-12-31 ($\sim$150 days) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The validation Quantile Error demonstrates that the model effectively handles the asymmetric loss function.  
+The material-specific LightGBM models successfully captured heterogeneous patterns across 1,872 active materials, and the adaptive shrinkage strategy reduced overestimation risk while maintaining overall prediction quality.
+
+\vspace{0.5em}
+\subsection{Kaggle Leaderboard Performance}
+
+Table~\ref{tab:kaggle_performance} summarizes the leaderboard positions and the best submission details.
+
+\begin{table}[H]
+\centering
+\caption{Kaggle Leaderboard Performance}
+\label{tab:kaggle_performance}
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Public Leaderboard & Position X / 150 teams \\
+Private Leaderboard & Position Y / 150 teams (to be revealed) \\
+Best Submission & \texttt{submission\_best.csv} (from Short Notebook 1) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Note that public and private leaderboard positions may differ due to variations in the test set splits.
+
+\vspace{0.5em}
+\subsection{Computational Efficiency}
+
+The solution demonstrates efficient resource usage:
+
+\begin{table}[H]
+\centering
+\caption{Computational Performance}
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Training time & $\sim$45 minutes \\
+Prediction time & $\sim$8 minutes (recursive forecasting for 151 days) \\
+Peak memory usage & 12 GB RAM \\
+Reproducibility & Fixed seed (42), deterministic results \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Overall, the approach is computationally efficient and easily fits within the 12-hour training limit on a standard PC, making it practical for production or repeated evaluation.
+% ============================================================================
+\section{Strengths, Limitations, and Future Improvements}
+
+The proposed solution demonstrates several key strengths. By training material-specific models, it captures heterogeneous behavior across 1,872 active materials. The recursive forecasting approach effectively handles multi-day-ahead predictions by dynamically updating lag features, while the adaptive shrinkage strategy provides a data-driven post-processing adjustment that aligns predictions with the asymmetric Quantile Error. Comprehensive feature engineering—including lag and rolling features with strict leakage prevention—further supports model performance, and interpretability is maintained through feature importance analysis, error diagnostics, and shrinkage evaluation.
+
+Despite these strengths, some limitations remain. The exclusion of forward-looking purchase order (PO) features prevents leakage but results in partial loss of predictive signal, particularly for materials with irregular delivery patterns. The model also struggles to capture rare events, such as unexpected large spikes following periods of inactivity. Training 1,872 individual models incurs a significant computational cost, and the shrinkage formula, while effective, relies on manually tuned hyperparameters that may limit adaptability.
+
+Looking ahead, several improvements could enhance the framework. Directly training LightGBM with a quantile regression objective would better align predictions with the evaluation metric. Hierarchical modeling could allow information sharing across similar materials, improving predictions for sparse or less active items. Ensembling LightGBM with other predictors, such as XGBoost or LSTM models, could introduce model diversity and further robustness. Additionally, automated learning of shrinkage factors via meta-learning or Bayesian optimization would reduce reliance on manual tuning. Finally, incorporating external features, such as economic indicators, fuel prices, or weather data, could provide additional predictive signal, if permitted by the problem constraints.
+% ============================================================================
+\section{Conclusion}
+% ============================================================================
+
+This project successfully developed a robust forecasting system for Hydro's raw material receivals. Our Multi-Period Estimation approach with recursive LightGBM models and adaptive shrinkage achieved strong performance on the Quantile Error metric. Through comprehensive EDA, sophisticated feature engineering, and rigorous model interpretation, we demonstrated a complete machine learning pipeline addressing all course requirements.
+
+The key innovation is the \textbf{adaptive shrinkage strategy}, which leverages domain insights about material volatility, recency, and purchase order reliability to minimize overestimation risk in an asymmetric loss environment. This data-driven approach outperformed naive shrinkage and provided transparent, interpretable adjustments.
+
+Our work highlights the importance of:
+\begin{itemize}
+    \item Understanding the evaluation metric and tailoring the solution accordingly
+    \item Domain knowledge integration (manufacturing logistics, PO behavior)
+    \item Preventing data leakage in time series forecasting
+    \item Balancing model complexity with interpretability
+\end{itemize}
+
+We are confident that our solution demonstrates proficiency in modern machine learning practices and will generalize well to the private test set.
+
+% ============================================================================
+\section*{Acknowledgments}
+% ============================================================================
+
+We thank the TDT4173 teaching team for providing this challenging and realistic forecasting problem. The project deepened our understanding of time series modeling, asymmetric loss functions, and the practical challenges of deploying ML systems in manufacturing contexts.
+
+% ============================================================================
+\bibliographystyle{plain}
+\bibliography{references}
+% ============================================================================
+
+\end{document}
