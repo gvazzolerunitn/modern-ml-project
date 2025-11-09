@@ -61,7 +61,7 @@ This report presents two complementary approaches to forecasting raw material re
 
 \textbf{Approach 1 (Short Notebook 1)} implements a Multi-Period Estimation (MPE) methodology with recursive forecasting, training 121 material-specific LightGBM models combined with adaptive shrinkage factors based on volatility, recency, and purchase order reliability. This approach achieved a validation Quantile Error of 20,018 with high interpretability.
 
-\textbf{Approach 2 (Short Notebook 2+Rolling)} develops an advanced ensemble combining CatBoost and LightGBM with 51 engineered features (including Fourier transforms, target encoding, and interaction terms) and Optuna hyperparameter optimization. Through direct quantile objective training and automated hyperparameter tuning, CatBoost achieved a validation Quantile Loss of 12,348 and LightGBM 11,342.
+\textbf{Approach 2 (Short Notebook 2+Rolling)} develops an advanced ensemble combining CatBoost and LightGBM with over 120 engineered features (including Fourier transforms, target encoding, lag interactions, rolling statistics, and cross-features) and Optuna hyperparameter optimization. Through direct quantile objective training and automated hyperparameter tuning, CatBoost achieved a validation Quantile Loss of 12,348 and LightGBM 11,342.
 
 Both solutions include extensive exploratory data analysis, sophisticated feature engineering with strict leakage prevention, and comprehensive model interpretability analysis. Our dual methodology demonstrates strong performance on the Kaggle leaderboard by leveraging domain insights about purchase orders, material activity patterns, and historical volatility through complementary modeling paradigms.
 \end{abstract}
@@ -344,7 +344,7 @@ Categorical subset & 4 & \texttt{dayofweek}, \texttt{month}, \texttt{weekofyear}
 \end{table}
 
 \noindent
-\textbf{Note:} Approach 2 (Short Notebook 2+Rolling) extends this base feature set with 34 additional advanced features, 
+\textbf{Note:} Approach 2 (Short Notebook 2+Rolling) extends this base feature set with over 100 additional advanced features, 
 described in Section 5.
 
 % ============================================================================
@@ -566,8 +566,8 @@ that combines multiple gradient boosting models with extensive feature engineeri
 
 \subsection{Enhanced Feature Engineering}
 
-Beyond the 17 base features used in the material-specific approach, we engineered \textbf{34 additional advanced features} 
-capturing higher-order patterns and cross-feature interactions.
+Beyond the 17 base features used in the material-specific approach, we engineered \textbf{over 100 additional advanced features} 
+capturing higher-order patterns, cross-feature interactions, and sophisticated statistical properties.
 
 \subsubsection{Advanced Temporal Features}
 
@@ -653,12 +653,12 @@ and applied to both validation (2024) and test (2025) without recomputation.
 \subsubsection{Feature Set Summary (Approach 2)}
 
 Table~\ref{tab:advanced_features} summarizes the complete feature set used in Short Notebook 2+Rolling.
-This represents a significant expansion from the 17 base features in Approach 1, adding 34 advanced features 
+This represents a significant expansion from the 17 base features in Approach 1, adding over 100 advanced features 
 to capture higher-order patterns, interactions, and material-level statistics.
 
 \begin{table}[H]
 \centering
-\caption{Advanced Feature Categories for Approach 2 (Total: 51 features)}
+\caption{Advanced Feature Categories for Approach 2 (Total: 120+ features)}
 \label{tab:advanced_features}
 \begin{tabular}{lc}
 \toprule
@@ -666,18 +666,20 @@ to capture higher-order patterns, interactions, and material-level statistics.
 \midrule
 Basic temporal (dayofweek, month, quarter, etc.) & 8 \\
 Lag features (7d, 14d, 21d, 28d) & 4 \\
-Rolling windows (7d--224d: sum, mean, std, max, EWM) & 12 \\
-Ratio \& volatility (30d/90d, CV, trends) & 6 \\
+Rolling windows (8 windows × 6 stats: sum, mean, std, max, count, EWM) & 48 \\
+Ratio \& volatility (30d/90d, 30d/224d, CV, trends) & 7 \\
 Fourier seasonality (weekly, monthly, quarterly) & 6 \\
 Lag interactions (lag × PO, lag ratios) & 4 \\
-Higher-order stats (skewness, kurtosis, IQR, autocorr) & 5 \\
+Higher-order stats (skewness, kurtosis, quantiles, IQR, autocorr) & 6 \\
 Trend \& momentum (momentum, acceleration) & 2 \\
 Target encoding (smoothed stats + interactions) & 6 \\
-PO-based (count, quantity, reliability) & 5 \\
+PO-based (count, quantity, reliability, historical) & 7 \\
 Recency (days since last, days since nonzero) & 2 \\
-Metadata (supplier diversity, material codes) & 3 \\
+Metadata (supplier diversity, material alloy, format codes) & 3 \\
+Cross-features (horizon interactions) & 3 \\
+Calendar features (sin/cos transforms, indicators) & 7 \\
 \midrule
-\textbf{Total} & \textbf{51} \\
+\textbf{Total} & \textbf{120+} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1032,7 +1034,7 @@ This approach trained \textbf{121 individual LightGBM models}, one per active ma
 
 \subsubsection{Approach 2: Ensemble with Advanced Features (Short Notebook 2+Rolling)}
 
-This approach combined \textbf{CatBoost and LightGBM} with extensive feature engineering (51 features vs. 17) 
+This approach combined \textbf{CatBoost and LightGBM} with extensive feature engineering (120+ features vs. 17) 
 and Optuna hyperparameter optimization, trained on synthetic forecasting tasks spanning 2005--2023.
 
 \begin{table}[H]
@@ -1049,9 +1051,9 @@ and Optuna hyperparameter optimization, trained on synthetic forecasting tasks s
 \quad Ensemble (60/40 blend) & \textbf{11,945} (estimated) \\
 \midrule
 \textbf{Feature Engineering} & \\
-\quad Total features & 51 \\
-\quad Advanced features added & 34 \\
-\quad Key innovations & Fourier, target encoding, interactions \\
+\quad Total features & 120+ \\
+\quad Advanced features added & 100+ \\
+\quad Key innovations & Fourier, target encoding, interactions, higher-order stats \\
 \midrule
 \textbf{Model Configuration} & \\
 \quad Objective & Quantile ($\alpha=0.2$) - direct optimization \\
@@ -1143,7 +1145,7 @@ Our dual-approach methodology demonstrates several key strengths across both imp
 The first approach leverages \textbf{personalization through 121 individual models}~\cite{ke2017lightgbm}, each capturing material-specific behavioral patterns. The adaptive calibration mechanism adjusts predictions based on volatility, recency, and purchase order reliability, providing transparent post-processing aligned with the asymmetric penalty structure. This material-specific design enables direct \textbf{interpretability through per-material feature importance analysis}. The recursive forecasting strategy generates day-by-day predictions with dynamic lag updates, preventing future information leakage while maintaining temporal causality.
 
 \paragraph{Approach 2 (Ensemble with Advanced Features):}
-The second approach achieves superior predictive performance through \textbf{advanced feature engineering with 51 carefully designed variables}~\cite{kuhn2013applied}, including Fourier transforms for seasonality~\cite{hyndman2018forecasting}, target encoding for material-level priors~\cite{micci2001preprocessing}, and sophisticated interaction terms. The methodology employs \textbf{direct quantile optimization}~\cite{koenker1978regression,koenker2005quantile} with native quantile loss ($\alpha=0.2$), ensuring training objectives align with the evaluation metric. Automated hyperparameter tuning through Optuna~\cite{akiba2019optuna} systematically explores the configuration space across 100 trials per model. The ensemble strategy combines CatBoost~\cite{prokhorenkova2018catboost} and LightGBM~\cite{ke2017lightgbm} predictions, leveraging complementary strengths to reduce model-specific biases. Validation performance demonstrates effectiveness with CatBoost achieving QL 12,348 and LightGBM 11,342 on 2024 data.
+The second approach achieves superior predictive performance through \textbf{advanced feature engineering with over 120 carefully designed variables}~\cite{kuhn2013applied}, including Fourier transforms for seasonality~\cite{hyndman2018forecasting}, target encoding for material-level priors~\cite{micci2001preprocessing}, sophisticated interaction terms, and higher-order statistical moments. The methodology employs \textbf{direct quantile optimization}~\cite{koenker1978regression,koenker2005quantile} with native quantile loss ($\alpha=0.2$), ensuring training objectives align with the evaluation metric. Automated hyperparameter tuning through Optuna~\cite{akiba2019optuna} systematically explores the configuration space across 100 trials per model. The ensemble strategy combines CatBoost~\cite{prokhorenkova2018catboost} and LightGBM~\cite{ke2017lightgbm} predictions, leveraging complementary strengths to reduce model-specific biases. Validation performance demonstrates effectiveness with CatBoost achieving QL 12,348 and LightGBM 11,342 on 2024 data.
 
 \paragraph{Shared Strengths:}
 Both approaches benefit from comprehensive exploratory data analysis covering temporal trends, material distribution, purchase order reliability, and data quality. Rigorous leakage prevention through strict temporal validation ensures model integrity. Domain knowledge from manufacturing logistics informed feature engineering and shrinkage strategies, while conservative calibration addresses the asymmetric $q=0.2$ penalty structure.
