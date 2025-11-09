@@ -1,53 +1,91 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Problem Description}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Evaluation Metric}{3}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Data Sources}{3}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Exploratory Data Analysis (EDA)}{3}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Temporal Analysis of Receivals}{3}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Monthly Trends}{3}{subsubsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.2}Material Distribution Analysis}{4}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Pareto Principle (80/20 Rule)}{4}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Coefficient of Variation (CV)}{4}{subsubsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.3}Purchase Order Analysis}{4}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}PO as Predictive Signal}{4}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}PO Reliability Analysis}{4}{subsubsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.4}Data Quality and Cleaning}{5}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Missing Values and Outliers}{5}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Product Splitting}{5}{subsubsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.5}Domain Knowledge Search}{5}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Feature Engineering}{5}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Active Material Filtering}{5}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Temporal Features}{5}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Lag Features}{6}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Rolling Aggregation Features}{6}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Purchase Order Features (Excluded from Training)}{7}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Feature Set Summary}{7}{subsection.3.6}%
-\contentsline {section}{\numberline {4}Modeling Approach}{7}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Architecture Overview}{7}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Model Choice: LightGBM}{8}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Alternative Models Explored}{8}{subsection.4.3}%
-\contentsline {paragraph}{XGBoost.}{9}{section*.7}%
-\contentsline {subsection}{\numberline {4.4}Training Strategy}{9}{subsection.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.1}Validation Split}{9}{subsubsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.2}Early Stopping}{9}{subsubsection.4.4.2}%
-\contentsline {subsubsection}{\numberline {4.4.3}Retraining on Full Data}{9}{subsubsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.5}Recursive Forecasting}{9}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Adaptive Shrinkage Strategy}{10}{subsection.4.6}%
-\contentsline {subsubsection}{\numberline {4.6.1}Motivation}{10}{subsubsection.4.6.1}%
-\contentsline {subsubsection}{\numberline {4.6.2}Shrinkage Formula}{10}{subsubsection.4.6.2}%
-\contentsline {section}{\numberline {5}Model Interpretation}{11}{section.5}%
-\contentsline {section}{\numberline {6}Model Interpretation and Error Analysis}{11}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Feature Importance Analysis}{11}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Error Analysis}{11}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Shrinkage Diagnostics}{12}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}Shrinkage vs. Volatility}{12}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}Shrinkage vs. Purchase Orders}{12}{subsubsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.4}Validation Visualization}{13}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Results and Evaluation}{13}{section.7}%
-\contentsline {section}{\numberline {8}Validation and Performance}{13}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Validation Performance}{13}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Kaggle Leaderboard Performance}{13}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Computational Efficiency}{14}{subsection.8.3}%
-\contentsline {section}{\numberline {9}Strengths, Limitations, and Future Improvements}{14}{section.9}%
-\contentsline {section}{\numberline {10}Conclusion}{14}{section.10}%
+\contentsline {section}{\numberline {1}Introduction}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Problem Description}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Evaluation Metric}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Data Sources}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Exploratory Data Analysis (EDA)}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Temporal Analysis of Receivals}{4}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Monthly Trends}{4}{subsubsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.2}Material Distribution Analysis}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Pareto Principle (80/20 Rule)}{5}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Coefficient of Variation (CV)}{5}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}Purchase Order Analysis}{5}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}PO as Predictive Signal}{5}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}PO Reliability Analysis}{5}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.4}Data Quality and Cleaning}{6}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Missing Values and Outliers}{6}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Product Splitting}{6}{subsubsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.5}Domain Knowledge Search}{6}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Feature Engineering}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Active Material Filtering}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Temporal Features}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Lag Features}{7}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Rolling Aggregation Features}{7}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Purchase Order Features (Excluded from Training)}{8}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Feature Set Summary (Approach 1)}{8}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Modeling Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Architecture Overview}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Model Choice: LightGBM}{9}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Alternative Models Explored}{10}{subsection.4.3}%
+\contentsline {paragraph}{XGBoost.}{10}{section*.7}%
+\contentsline {paragraph}{CatBoost.}{10}{section*.8}%
+\contentsline {subsection}{\numberline {4.4}Training Strategy}{10}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Validation Split}{10}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Early Stopping}{10}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}Retraining on Full Data}{11}{subsubsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.5}Recursive Forecasting}{11}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Adaptive Shrinkage Strategy}{11}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Motivation}{11}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Shrinkage Formula}{11}{subsubsection.4.6.2}%
+\contentsline {section}{\numberline {5}Modeling Approach 2: Advanced Ensemble (Short Notebook 2)}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Enhanced Feature Engineering}{12}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Advanced Temporal Features}{12}{subsubsection.5.1.1}%
+\contentsline {paragraph}{1. Fourier Features.}{12}{section*.9}%
+\contentsline {paragraph}{2. Lag Interaction Features.}{13}{section*.10}%
+\contentsline {paragraph}{3. Higher-Order Rolling Statistics.}{13}{section*.11}%
+\contentsline {paragraph}{4. Autocorrelation Features.}{13}{section*.12}%
+\contentsline {paragraph}{5. Trend and Momentum Features.}{13}{section*.13}%
+\contentsline {subsubsection}{\numberline {5.1.2}Target Encoding}{14}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Feature Set Summary (Approach 2)}{14}{subsubsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.2}Hyperparameter Optimization with Optuna}{14}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Optimization Strategy}{15}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Hyperparameter Search Spaces}{15}{subsubsection.5.2.2}%
+\contentsline {paragraph}{CatBoost Search Space:}{15}{section*.15}%
+\contentsline {paragraph}{LightGBM Search Space:}{15}{section*.16}%
+\contentsline {subsubsection}{\numberline {5.2.3}Optimization Results}{15}{subsubsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.3}Ensemble Strategy}{16}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Ensemble Weight Configurations}{16}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Conservative Calibration}{16}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.4}Training Strategy}{17}{subsection.5.4}%
+\contentsline {paragraph}{Temporal Split.}{17}{section*.19}%
+\contentsline {paragraph}{Sample Generation.}{17}{section*.20}%
+\contentsline {section}{\numberline {6}Model Interpretation}{17}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Feature Importance Analysis}{17}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Error Analysis}{18}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Shrinkage Diagnostics}{18}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Shrinkage vs. Volatility}{18}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Shrinkage vs. Purchase Orders}{19}{subsubsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.4}Validation Visualization}{19}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Results and Evaluation}{19}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Comparative Performance Analysis}{19}{subsection.7.1}%
+\contentsline {subsubsection}{\numberline {7.1.1}Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{19}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}Approach 2: Ensemble with Advanced Features (Short Notebook 2)}{20}{subsubsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.2}Kaggle Leaderboard Performance}{21}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Computational Efficiency}{22}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Strengths, Limitations, and Future Improvements}{22}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Strengths}{22}{subsection.8.1}%
+\contentsline {paragraph}{Approach 1 (Material-Specific Models):}{22}{section*.29}%
+\contentsline {paragraph}{Approach 2 (Ensemble with Advanced Features):}{22}{section*.30}%
+\contentsline {paragraph}{Shared Strengths:}{22}{section*.31}%
+\contentsline {subsection}{\numberline {8.2}Limitations}{23}{subsection.8.2}%
+\contentsline {paragraph}{Approach 1:}{23}{section*.32}%
+\contentsline {paragraph}{Approach 2:}{23}{section*.33}%
+\contentsline {paragraph}{Shared Limitations:}{23}{section*.34}%
+\contentsline {subsection}{\numberline {8.3}Future Improvements}{23}{subsection.8.3}%
+\contentsline {paragraph}{Model Architecture:}{23}{section*.35}%
+\contentsline {paragraph}{Feature Engineering:}{23}{section*.36}%
+\contentsline {paragraph}{Calibration:}{23}{section*.37}%
+\contentsline {paragraph}{Validation Strategy:}{24}{section*.38}%
+\contentsline {section}{\numberline {9}Conclusion}{24}{section.9}%
+\contentsline {paragraph}{Approach 1: Material-Specific Recursive Forecasting}{24}{section*.39}%
+\contentsline {paragraph}{Approach 2: Ensemble with Advanced Features}{24}{section*.40}%

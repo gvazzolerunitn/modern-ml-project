@@ -5,82 +5,146 @@
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \babel@aux{english}{}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Problem Description}{3}{subsection.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Evaluation Metric}{3}{subsection.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Data Sources}{3}{subsection.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Exploratory Data Analysis (EDA)}{3}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Temporal Analysis of Receivals}{3}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.1}Monthly Trends}{3}{subsubsection.2.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Material Distribution Analysis}{4}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Pareto Principle (80/20 Rule)}{4}{subsubsection.2.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Coefficient of Variation (CV)}{4}{subsubsection.2.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Purchase Order Analysis}{4}{subsection.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}PO as Predictive Signal}{4}{subsubsection.2.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}PO Reliability Analysis}{4}{subsubsection.2.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Data Quality and Cleaning}{5}{subsection.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}Missing Values and Outliers}{5}{subsubsection.2.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}Product Splitting}{5}{subsubsection.2.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Domain Knowledge Search}{5}{subsection.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Feature Engineering}{5}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Active Material Filtering}{5}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Temporal Features}{5}{subsection.3.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Overview of temporal features}}{6}{table.caption.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Lag Features}{6}{subsection.3.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Lag features capturing short-, medium-, and long-term dependencies}}{6}{table.caption.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{4}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Problem Description}{4}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Evaluation Metric}{4}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Data Sources}{4}{subsection.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Exploratory Data Analysis (EDA)}{4}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Temporal Analysis of Receivals}{4}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.1}Monthly Trends}{4}{subsubsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Material Distribution Analysis}{5}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Pareto Principle (80/20 Rule)}{5}{subsubsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Coefficient of Variation (CV)}{5}{subsubsection.2.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Purchase Order Analysis}{5}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}PO as Predictive Signal}{5}{subsubsection.2.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}PO Reliability Analysis}{5}{subsubsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Data Quality and Cleaning}{6}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}Missing Values and Outliers}{6}{subsubsection.2.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}Product Splitting}{6}{subsubsection.2.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Domain Knowledge Search}{6}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Feature Engineering}{6}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Active Material Filtering}{6}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Temporal Features}{6}{subsection.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Overview of temporal features}}{7}{table.caption.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Lag Features}{7}{subsection.3.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Lag features capturing short-, medium-, and long-term dependencies}}{7}{table.caption.3}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:lags}{{2}{6}{Lag features capturing short-, medium-, and long-term dependencies}{table.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Rolling Aggregation Features}{6}{subsection.3.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Rolling aggregation features}}{6}{table.caption.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Purchase Order Features (Excluded from Training)}{7}{subsection.3.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Engineered PO-based features}}{7}{table.caption.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Feature Set Summary}{7}{subsection.3.6}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Summary of engineered features}}{7}{table.caption.6}\protected@file@percent }
-\newlabel{tab:features-summary}{{5}{7}{Summary of engineered features}{table.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Modeling Approach}{7}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Architecture Overview}{7}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Model Choice: LightGBM}{8}{subsection.4.2}\protected@file@percent }
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces LightGBM Configuration}}{8}{lstlisting.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Alternative Models Explored}{8}{subsection.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{XGBoost.}{9}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Training Strategy}{9}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Validation Split}{9}{subsubsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Early Stopping}{9}{subsubsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.3}Retraining on Full Data}{9}{subsubsection.4.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Recursive Forecasting}{9}{subsection.4.5}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Recursive Multi-Day Forecasting}}{10}{algorithm.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Adaptive Shrinkage Strategy}{10}{subsection.4.6}\protected@file@percent }
-\newlabel{sec:shrinkage}{{4.6}{10}{Adaptive Shrinkage Strategy}{subsection.4.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.6.1}Motivation}{10}{subsubsection.4.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.6.2}Shrinkage Formula}{10}{subsubsection.4.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Model Interpretation}{11}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Model Interpretation and Error Analysis}{11}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Feature Importance Analysis}{11}{subsection.6.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Top Features for Material 3901 with Interpretation}}{11}{table.caption.8}\protected@file@percent }
-\newlabel{tab:feature_importance}{{6}{11}{Top Features for Material 3901 with Interpretation}{table.caption.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Error Analysis}{11}{subsection.6.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Top 5 Worst Performing Materials (Validation Set)}}{12}{table.caption.9}\protected@file@percent }
-\newlabel{tab:worst_materials}{{7}{12}{Top 5 Worst Performing Materials (Validation Set)}{table.caption.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Shrinkage Diagnostics}{12}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.1}Shrinkage vs. Volatility}{12}{subsubsection.6.3.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Mean Shrinkage by Material Volatility (CV)}}{12}{table.caption.10}\protected@file@percent }
-\newlabel{tab:shrinkage_cv}{{8}{12}{Mean Shrinkage by Material Volatility (CV)}{table.caption.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.2}Shrinkage vs. Purchase Orders}{12}{subsubsection.6.3.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Mean Shrinkage by Future PO Status}}{12}{table.caption.11}\protected@file@percent }
-\newlabel{tab:shrinkage_po}{{9}{12}{Mean Shrinkage by Future PO Status}{table.caption.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Validation Visualization}{13}{subsection.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Results and Evaluation}{13}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Validation and Performance}{13}{section.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Validation Performance}{13}{subsection.8.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Validation Results}}{13}{table.caption.12}\protected@file@percent }
-\newlabel{tab:validation_results}{{10}{13}{Validation Results}{table.caption.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Kaggle Leaderboard Performance}{13}{subsection.8.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Kaggle Leaderboard Performance}}{13}{table.caption.13}\protected@file@percent }
-\newlabel{tab:kaggle_performance}{{11}{13}{Kaggle Leaderboard Performance}{table.caption.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Computational Efficiency}{14}{subsection.8.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Computational Performance}}{14}{table.caption.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Strengths, Limitations, and Future Improvements}{14}{section.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{14}{section.10}\protected@file@percent }
+\newlabel{tab:lags}{{2}{7}{Lag features capturing short-, medium-, and long-term dependencies}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Rolling Aggregation Features}{7}{subsection.3.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Rolling aggregation features}}{7}{table.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Purchase Order Features (Excluded from Training)}{8}{subsection.3.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Engineered PO-based features}}{8}{table.caption.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Feature Set Summary (Approach 1)}{8}{subsection.3.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Summary of engineered features for Approach 1 (Short Notebook 1)}}{8}{table.caption.6}\protected@file@percent }
+\newlabel{tab:features-summary}{{5}{8}{Summary of engineered features for Approach 1 (Short Notebook 1)}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Modeling Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{8}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Architecture Overview}{8}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Model Choice: LightGBM}{9}{subsection.4.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces LightGBM Configuration}}{9}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Alternative Models Explored}{10}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{XGBoost.}{10}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{CatBoost.}{10}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Training Strategy}{10}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Validation Split}{10}{subsubsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Early Stopping}{10}{subsubsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.3}Retraining on Full Data}{11}{subsubsection.4.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Recursive Forecasting}{11}{subsection.4.5}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Recursive Multi-Day Forecasting}}{11}{algorithm.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Adaptive Shrinkage Strategy}{11}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:shrinkage}{{4.6}{11}{Adaptive Shrinkage Strategy}{subsection.4.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.6.1}Motivation}{11}{subsubsection.4.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.6.2}Shrinkage Formula}{11}{subsubsection.4.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Modeling Approach 2: Advanced Ensemble (Short Notebook 2)}{12}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Enhanced Feature Engineering}{12}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}Advanced Temporal Features}{12}{subsubsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{1. Fourier Features.}{12}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2. Lag Interaction Features.}{13}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. Higher-Order Rolling Statistics.}{13}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{4. Autocorrelation Features.}{13}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{5. Trend and Momentum Features.}{13}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.2}Target Encoding}{14}{subsubsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.3}Feature Set Summary (Approach 2)}{14}{subsubsection.5.1.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Advanced Feature Categories for Approach 2 (Total: 51 features)}}{14}{table.caption.14}\protected@file@percent }
+\newlabel{tab:advanced_features}{{6}{14}{Advanced Feature Categories for Approach 2 (Total: 51 features)}{table.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Hyperparameter Optimization with Optuna}{14}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Optimization Strategy}{15}{subsubsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Hyperparameter Search Spaces}{15}{subsubsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{CatBoost Search Space:}{15}{section*.15}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces CatBoost Optuna Configuration}}{15}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{LightGBM Search Space:}{15}{section*.16}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces LightGBM Optuna Configuration}}{15}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}Optimization Results}{15}{subsubsection.5.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Optuna Hyperparameter Optimization Results}}{16}{table.caption.17}\protected@file@percent }
+\newlabel{tab:optuna_results}{{7}{16}{Optuna Hyperparameter Optimization Results}{table.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Ensemble Strategy}{16}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.1}Ensemble Weight Configurations}{16}{subsubsection.5.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Ensemble Weight Configurations Tested}}{16}{table.caption.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.2}Conservative Calibration}{16}{subsubsection.5.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Training Strategy}{17}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Temporal Split.}{17}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sample Generation.}{17}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Model Interpretation}{17}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Feature Importance Analysis}{17}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Top Features for Material 3901 with Interpretation}}{18}{table.caption.21}\protected@file@percent }
+\newlabel{tab:feature_importance}{{9}{18}{Top Features for Material 3901 with Interpretation}{table.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Error Analysis}{18}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Top 5 Worst Performing Materials (Validation Set)}}{18}{table.caption.22}\protected@file@percent }
+\newlabel{tab:worst_materials}{{10}{18}{Top 5 Worst Performing Materials (Validation Set)}{table.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Shrinkage Diagnostics}{18}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.1}Shrinkage vs. Volatility}{18}{subsubsection.6.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Mean Shrinkage by Material Volatility (CV)}}{19}{table.caption.23}\protected@file@percent }
+\newlabel{tab:shrinkage_cv}{{11}{19}{Mean Shrinkage by Material Volatility (CV)}{table.caption.23}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.2}Shrinkage vs. Purchase Orders}{19}{subsubsection.6.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Mean Shrinkage by Future PO Status}}{19}{table.caption.24}\protected@file@percent }
+\newlabel{tab:shrinkage_po}{{12}{19}{Mean Shrinkage by Future PO Status}{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Validation Visualization}{19}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Results and Evaluation}{19}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Comparative Performance Analysis}{19}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.1.1}Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{19}{subsubsection.7.1.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Short Notebook 1 - Performance Summary}}{20}{table.caption.25}\protected@file@percent }
+\newlabel{tab:notebook1_results}{{13}{20}{Short Notebook 1 - Performance Summary}{table.caption.25}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.1.2}Approach 2: Ensemble with Advanced Features (Short Notebook 2)}{20}{subsubsection.7.1.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Short Notebook 2 - Performance Summary}}{21}{table.caption.26}\protected@file@percent }
+\newlabel{tab:notebook2_results}{{14}{21}{Short Notebook 2 - Performance Summary}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Kaggle Leaderboard Performance}{21}{subsection.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Kaggle Competition Performance}}{21}{table.caption.27}\protected@file@percent }
+\newlabel{tab:kaggle_performance}{{15}{21}{Kaggle Competition Performance}{table.caption.27}{}}
+\citation{ke2017lightgbm}
+\citation{kuhn2013applied}
+\citation{hyndman2018forecasting}
+\citation{micci2001preprocessing}
+\citation{koenker1978regression}
+\citation{koenker2005quantile}
+\citation{akiba2019optuna}
+\citation{prokhorenkova2018catboost}
+\citation{ke2017lightgbm}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Computational Efficiency}{22}{subsection.7.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Computational Performance Comparison}}{22}{table.caption.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Strengths, Limitations, and Future Improvements}{22}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Strengths}{22}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 1 (Material-Specific Models):}{22}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 2 (Ensemble with Advanced Features):}{22}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shared Strengths:}{22}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Limitations}{23}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 1:}{23}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 2:}{23}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shared Limitations:}{23}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Future Improvements}{23}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Model Architecture:}{23}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Feature Engineering:}{23}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calibration:}{23}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Validation Strategy:}{24}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{24}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 1: Material-Specific Recursive Forecasting}{24}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approach 2: Ensemble with Advanced Features}{24}{section*.40}\protected@file@percent }
 \bibstyle{plain}
 \bibdata{references}
-\gdef \@abspage@last{15}
+\bibcite{akiba2019optuna}{1}
+\bibcite{hyndman2018forecasting}{2}
+\bibcite{ke2017lightgbm}{3}
+\bibcite{koenker2005quantile}{4}
+\bibcite{koenker1978regression}{5}
+\bibcite{kuhn2013applied}{6}
+\bibcite{micci2001preprocessing}{7}
+\bibcite{prokhorenkova2018catboost}{8}
+\gdef \@abspage@last{25}

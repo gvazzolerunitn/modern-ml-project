@@ -59,7 +59,7 @@
 \begin{abstract}
 This report presents two complementary approaches to forecasting raw material receivals for Hydro's manufacturing process, both optimized for the Quantile Error metric ($q=0.2$) which heavily penalizes overestimation. 
 
-\textbf{Approach 1 (Short Notebook 1)} implements a Multi-Period Estimation (MPE) methodology with recursive forecasting, training 1,872 material-specific LightGBM models combined with adaptive shrinkage factors based on volatility, recency, and purchase order reliability. This approach achieved a validation Quantile Error of 20,018 with high interpretability.
+\textbf{Approach 1 (Short Notebook 1)} implements a Multi-Period Estimation (MPE) methodology with recursive forecasting, training 121 material-specific LightGBM models combined with adaptive shrinkage factors based on volatility, recency, and purchase order reliability. This approach achieved a validation Quantile Error of 20,018 with high interpretability.
 
 \textbf{Approach 2 (Short Notebook 2+Rolling)} develops an advanced ensemble combining CatBoost and LightGBM with 51 engineered features (including Fourier transforms, target encoding, and interaction terms) and Optuna hyperparameter optimization. Through direct quantile objective training and automated hyperparameter tuning, CatBoost achieved a validation Quantile Loss of 9,389 and LightGBM 10,143.
 
@@ -361,7 +361,7 @@ where independent models are trained per material and iteratively forecast multi
 The architecture is composed of three tightly integrated components:
 
 \begin{itemize}
-    \item \textbf{Material-specific models}: One LightGBM model was trained for each of the \textbf{1,872 active materials}, enabling tailored behavior that captures material-level idiosyncrasies.  
+    \item \textbf{Material-specific models}: One LightGBM model was trained for each of the \textbf{121 active materials}, enabling tailored behavior that captures material-level idiosyncrasies.  
     \item \textbf{Recursive forecasting}: Predictions are generated on a \textbf{day-by-day basis}, with input features dynamically updated at each step to incorporate previously forecasted values.  
     \item \textbf{Adaptive shrinkage}: A post-processing layer adjusts forecasts to mitigate systematic overestimation, ensuring more conservative and stable results.
 \end{itemize}

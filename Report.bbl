@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{akiba2019optuna}
+Takuya Akiba, Shotaro Sano, Toshihiko Yanase, Takeru Ohta, and Masanori Koyama.
+\newblock Optuna: A next-generation hyperparameter optimization framework.
+\newblock In {\em Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining}, pages 2623--2631, 2019.
+
+\bibitem{hyndman2018forecasting}
+Rob~J Hyndman and George Athanasopoulos.
+\newblock {\em Forecasting: principles and practice}.
+\newblock OTexts, 2nd edition, 2018.
+
+\bibitem{ke2017lightgbm}
+Guolin Ke, Qi~Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu.
+\newblock Lightgbm: A highly efficient gradient boosting decision tree.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages 3146--3154, 2017.
+
+\bibitem{koenker2005quantile}
+Roger Koenker.
+\newblock {\em Quantile regression}.
+\newblock Cambridge University Press, 2005.
+
+\bibitem{koenker1978regression}
+Roger Koenker and Gilbert Bassett~Jr.
+\newblock Regression quantiles.
+\newblock {\em Econometrica: Journal of the Econometric Society}, pages 33--50, 1978.
+
+\bibitem{kuhn2013applied}
+Max Kuhn and Kjell Johnson.
+\newblock {\em Applied predictive modeling}, volume~26.
+\newblock Springer, 2013.
+
+\bibitem{micci2001preprocessing}
+Daniele Micci-Barreca.
+\newblock Preprocessing schemes for high-cardinality categorical attributes in classification and prediction problems.
+\newblock {\em ACM SIGKDD Explorations Newsletter}, 3(1):27--32, 2001.
+
+\bibitem{prokhorenkova2018catboost}
+Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna~Veronika Dorogush, and Andrey Gulin.
+\newblock Catboost: unbiased boosting with categorical features.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages 6638--6648, 2018.
+
+\end{thebibliography}
