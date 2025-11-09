@@ -61,7 +61,7 @@ This report presents two complementary approaches to forecasting raw material re
 
 \textbf{Approach 1 (Short Notebook 1)} implements a Multi-Period Estimation (MPE) methodology with recursive forecasting, training 1,872 material-specific LightGBM models combined with adaptive shrinkage factors based on volatility, recency, and purchase order reliability. This approach achieved a validation Quantile Error of 20,018 with high interpretability.
 
-\textbf{Approach 2 (Short Notebook 2)} develops an advanced ensemble combining CatBoost and LightGBM with 51 engineered features (including Fourier transforms, target encoding, and interaction terms) and Optuna hyperparameter optimization. Through direct quantile objective training and automated hyperparameter tuning, CatBoost achieved a validation Quantile Loss of 9,389 and LightGBM 10,143.
+\textbf{Approach 2 (Short Notebook 2+Rolling)} develops an advanced ensemble combining CatBoost and LightGBM with 51 engineered features (including Fourier transforms, target encoding, and interaction terms) and Optuna hyperparameter optimization. Through direct quantile objective training and automated hyperparameter tuning, CatBoost achieved a validation Quantile Loss of 9,389 and LightGBM 10,143.
 
 Both solutions include extensive exploratory data analysis, sophisticated feature engineering with strict leakage prevention, and comprehensive model interpretability analysis. Our dual methodology demonstrates strong performance on the Kaggle leaderboard by leveraging domain insights about purchase orders, material activity patterns, and historical volatility through complementary modeling paradigms.
 \end{abstract}
@@ -344,7 +344,7 @@ Categorical subset & 4 & \texttt{dayofweek}, \texttt{month}, \texttt{weekofyear}
 \end{table}
 
 \noindent
-\textbf{Note:} Approach 2 (Short Notebook 2) extends this base feature set with 34 additional advanced features, 
+\textbf{Note:} Approach 2 (Short Notebook 2+Rolling) extends this base feature set with 34 additional advanced features, 
 described in Section 5.
 
 % ============================================================================
@@ -449,7 +449,7 @@ CatBoost & 1.5× slower & Native & Best for quantile regression, used in ensembl
 \noindent
 \textbf{Final selection.}  
 For the material-specific approach (Short Notebook 1), LightGBM emerged as the most effective model due to its computational efficiency.  
-For the advanced ensemble approach (Short Notebook 2), we combined \textbf{CatBoost and LightGBM} with Optuna-tuned hyperparameters 
+For the advanced ensemble approach (Short Notebook 2+Rolling), we combined \textbf{CatBoost and LightGBM} with Optuna-tuned hyperparameters 
 to leverage their complementary strengths.
 
 \subsection{Training Strategy}
@@ -557,10 +557,10 @@ The final prediction is obtained as
 \vspace{0.5em}
 
 % ============================================================================
-\section{Modeling Approach 2: Advanced Ensemble (Short Notebook 2)}
+\section{Modeling Approach 2: Advanced Ensemble (Short Notebook 2+Rolling)}
 % ============================================================================
 
-This section describes our second forecasting methodology, implemented in Short Notebook 2.
+This section describes our second forecasting methodology, implemented in Short Notebook 2+Rolling.
 Building upon the material-specific approach, we developed an advanced ensemble methodology 
 that combines multiple gradient boosting models with extensive feature engineering and hyperparameter optimization.
 
@@ -652,7 +652,7 @@ and applied to both validation (2024) and test (2025) without recomputation.
 \vspace{0.5em}
 \subsubsection{Feature Set Summary (Approach 2)}
 
-Table~\ref{tab:advanced_features} summarizes the complete feature set used in Short Notebook 2.
+Table~\ref{tab:advanced_features} summarizes the complete feature set used in Short Notebook 2+Rolling.
 This represents a significant expansion from the 17 base features in Approach 1, adding 34 advanced features 
 to capture higher-order patterns, interactions, and material-level statistics.
 
@@ -984,7 +984,7 @@ The final cumulative prediction is within 5\% of the actual value, confirming th
 
 This section presents the performance evaluation and comparison of our two forecasting methodologies:
 \textbf{Approach 1 (Short Notebook 1)} using material-specific recursive models, and 
-\textbf{Approach 2 (Short Notebook 2)} using an advanced ensemble with extensive feature engineering.
+\textbf{Approach 2 (Short Notebook 2+Rolling)} using an advanced ensemble with extensive feature engineering.
 
 \subsection{Comparative Performance Analysis}
 
@@ -1030,14 +1030,14 @@ This approach trained \textbf{1,872 individual LightGBM models}, one per active 
     \item High interpretability via feature importance per material
 \end{itemize}
 
-\subsubsection{Approach 2: Ensemble with Advanced Features (Short Notebook 2)}
+\subsubsection{Approach 2: Ensemble with Advanced Features (Short Notebook 2+Rolling)}
 
 This approach combined \textbf{CatBoost and LightGBM} with extensive feature engineering (51 features vs. 17) 
 and Optuna hyperparameter optimization, trained on synthetic forecasting tasks spanning 2005--2023.
 
 \begin{table}[H]
 \centering
-\caption{Short Notebook 2 - Performance Summary}
+\caption{Short Notebook 2+Rolling - Performance Summary}
 \label{tab:notebook2_results}
 \begin{tabular}{ll}
 \toprule
