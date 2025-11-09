@@ -816,7 +816,18 @@ systematic biases present in individual predictors, necessitating a corrective c
 We systematically evaluated multiple shrinkage values spanning from aggressive reduction ($s=0.93$, representing 
 7\% global adjustment) to minimal adjustment ($s=0.999$, representing 0.1\% reduction). The optimal value 
 was selected through validation set performance, balancing the trade-off between reducing overestimation 
-penalties and maintaining sufficient sensitivity to genuine high-volume deliveries.
+penalties and maintaining sufficient sensitivity to genuine high-volume deliveries. 
+This iterative testing of post-processing strategies was crucial for optimizing the final score. 
+After analyzing the validation performance and the resulting prediction statistics, the file \texttt{submission\_S0.90\_T15000kg\_xxxxxx.csv} was selected as the definitive submission for this approach.
+
+This choice represents the optimal tradeoff for the competition's Quantile Error metric (q=0.2). The reasoning is twofold:
+
+\begin{itemize}
+    \item \textbf{Shrinkage Factor (0.90):} A conservative global shrinkage factor of 0.90 was applied to uniformly reduce all predictions, mitigating the heavy penalty for over-prediction.
+    \item \textbf{Zeroing Threshold (15,000kg):} An aggressive 15,000kg threshold was implemented, setting all cumulative predictions below this value to zero. This step was vital for aligning with the conservative nature of the q=0.2 metric, as it significantly increased the number of zero predictions and eliminated low-confidence positive values that were likely to be penalized.
+\end{itemize}
+
+This combination of a 0.90 shrinkage and a 15,000kg threshold provided the most robust forecast against the metric's asymmetric penalty structure.
 
 \vspace{1em}
 \subsection{Training Strategy}
