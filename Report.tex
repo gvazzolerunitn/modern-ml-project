@@ -214,7 +214,7 @@ To reduce computational complexity and improve model focus, we implemented a heu
     \item \textbf{Criterion 2}: Materials with purchase orders in 2025 H1 (future activity expected)
 \end{itemize}
 
-This filtered 4,127 materials down to 1,872 active materials (45\%), significantly improving training efficiency while maintaining prediction quality for relevant materials.
+This filtered 4,127 materials down to 121 active materials (45\%), significantly improving training efficiency while maintaining prediction quality for relevant materials.
 
 \subsection{Temporal Features}
 
@@ -426,7 +426,7 @@ This comparison allowed us to assess the trade-offs between predictive accuracy 
 A gradient boosting implementation similar in concept to LightGBM.  
 We tested XGBoost as an alternative but found that, while it achieved \textbf{comparable predictive accuracy}, 
 it required \textbf{significantly longer training time} (approximately 2--3× slower than LightGBM).  
-Given the need to train 1,872 material-specific models, computational efficiency was a critical factor in our final selection.
+Given the need to train 121 material-specific models, computational efficiency was a critical factor in our final selection.
 
 \paragraph{CatBoost.}  
 A gradient boosting framework developed by Yandex with superior handling of categorical features and built-in support for quantile regression.  
@@ -992,7 +992,7 @@ We developed and evaluated two distinct forecasting approaches, each with unique
 
 \subsubsection{Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}
 
-This approach trained \textbf{1,872 individual LightGBM models}, one per active material, using recursive day-by-day forecasting with material-specific adaptive shrinkage.
+This approach trained \textbf{121 individual LightGBM models}, one per active material, using recursive day-by-day forecasting with material-specific adaptive shrinkage.
 
 \begin{table}[H]
 \centering
@@ -1004,7 +1004,7 @@ This approach trained \textbf{1,872 individual LightGBM models}, one per active 
 \midrule
 \textbf{Validation Performance} & \\
 \quad Quantile Error (Aug--Dec 2024) & 20,018 \\
-\quad Materials trained & 1,872 \\
+\quad Materials trained & 121 \\
 \quad Training period & 2022-01-01 to 2024-07-31 \\
 \midrule
 \textbf{Model Configuration} & \\
@@ -1091,8 +1091,8 @@ Table~\ref{tab:kaggle_performance} summarizes the competition results for both a
 \toprule
 \textbf{Approach} & \textbf{Public Score} & \textbf{Submission File} \\
 \midrule
-Approach 1 (Material-specific) & TBD & \texttt{submission\_best.csv} \\
-Approach 2 (Ensemble) & TBD & \texttt{submission\_advanced\_60cat\_40lgb\_0.997.csv} \\
+Approach 1 (Material-specific) & 5663 & \texttt{submission\_best.csv} \\
+Approach 2 (Ensemble) & 5406 & \texttt{submission\_S0.90\_T15000kg\_20251108\_200603.csv} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1128,7 +1128,7 @@ Reproducibility & Fixed seed (42) & Fixed seed (42) \\
 
 \noindent
 Both solutions easily fit within the 12-hour training limit on standard hardware. 
-Approach 1 requires more training time due to 1,872 individual models but has minimal tuning overhead. 
+Approach 1 requires more training time due to 121 individual models but has minimal tuning overhead. 
 Approach 2 requires upfront hyperparameter search but trains faster with shared models across materials.
 
 % ============================================================================
@@ -1140,7 +1140,7 @@ Approach 2 requires upfront hyperparameter search but trains faster with shared 
 Our dual-approach methodology demonstrates several key strengths across both implementations.
 
 \paragraph{Approach 1 (Material-Specific Models):}
-The first approach leverages \textbf{personalization through 1,872 individual models}~\cite{ke2017lightgbm}, each capturing material-specific behavioral patterns. The adaptive calibration mechanism adjusts predictions based on volatility, recency, and purchase order reliability, providing transparent post-processing aligned with the asymmetric penalty structure. This material-specific design enables direct \textbf{interpretability through per-material feature importance analysis}. The recursive forecasting strategy generates day-by-day predictions with dynamic lag updates, preventing future information leakage while maintaining temporal causality.
+The first approach leverages \textbf{personalization through 121 individual models}~\cite{ke2017lightgbm}, each capturing material-specific behavioral patterns. The adaptive calibration mechanism adjusts predictions based on volatility, recency, and purchase order reliability, providing transparent post-processing aligned with the asymmetric penalty structure. This material-specific design enables direct \textbf{interpretability through per-material feature importance analysis}. The recursive forecasting strategy generates day-by-day predictions with dynamic lag updates, preventing future information leakage while maintaining temporal causality.
 
 \paragraph{Approach 2 (Ensemble with Advanced Features):}
 The second approach achieves superior predictive performance through \textbf{advanced feature engineering with 51 carefully designed variables}~\cite{kuhn2013applied}, including Fourier transforms for seasonality~\cite{hyndman2018forecasting}, target encoding for material-level priors~\cite{micci2001preprocessing}, and sophisticated interaction terms. The methodology employs \textbf{direct quantile optimization}~\cite{koenker1978regression,koenker2005quantile} with native quantile loss ($\alpha=0.2$), ensuring training objectives align with the evaluation metric. Automated hyperparameter tuning through Optuna~\cite{akiba2019optuna} systematically explores the configuration space across 100 trials per model. The ensemble strategy combines CatBoost~\cite{prokhorenkova2018catboost} and LightGBM~\cite{ke2017lightgbm} predictions, leveraging complementary strengths to reduce model-specific biases. Validation performance demonstrates effectiveness with CatBoost achieving QL 9,389 and LightGBM 10,143 on 2024 data.
@@ -1154,7 +1154,7 @@ Both approaches benefit from comprehensive exploratory data analysis covering te
 Despite strong performance, certain limitations persist across both methodologies.
 
 \paragraph{Approach 1:}
-The material-specific approach requires approximately 45 minutes to train 1,872 individual models. Manual shrinkage tuning relies on heuristic thresholds that may not generalize optimally across all material types. Training on MAE objective creates a mismatch with the quantile evaluation metric, necessitating post-hoc shrinkage. The models struggle with rare events, particularly unexpected spikes following extended inactivity periods.
+The material-specific approach requires approximately 45 minutes to train 121 individual models. Manual shrinkage tuning relies on heuristic thresholds that may not generalize optimally across all material types. Training on MAE objective creates a mismatch with the quantile evaluation metric, necessitating post-hoc shrinkage. The models struggle with rare events, particularly unexpected spikes following extended inactivity periods.
 
 \paragraph{Approach 2:}
 The ensemble approach incurs significant hyperparameter search costs, with Optuna tuning adding approximately 60 minutes of computational overhead. Ensemble predictions lack direct material-level feature importance, reducing interpretability. The global shrinkage factor ($s=0.997$) applies uniform calibration without material-specific adaptation. The validation set of 5,000 samples may not fully represent behavioral diversity across all 4,127 materials.
@@ -1187,7 +1187,7 @@ This project successfully developed \textbf{two complementary forecasting system
 each demonstrating distinct strengths and addressing the asymmetric Quantile Error ($q=0.2$) metric through different methodologies.
 
 \paragraph{Approach 1: Material-Specific Recursive Forecasting}  
-Our first approach trained 1,872 individual LightGBM models with material-specific adaptive shrinkage factors. 
+Our first approach trained 121 individual LightGBM models with material-specific adaptive shrinkage factors. 
 This strategy achieved strong validation performance (QL = 20,018) while maintaining high interpretability and computational efficiency. 
 The key innovation—\textbf{adaptive shrinkage based on volatility, recency, and PO reliability}—provided 
 transparent, data-driven calibration aligned with the asymmetric penalty structure.
