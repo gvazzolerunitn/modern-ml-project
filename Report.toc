@@ -37,7 +37,7 @@
 \contentsline {subsection}{\numberline {4.6}Adaptive Shrinkage Strategy}{11}{subsection.4.6}%
 \contentsline {subsubsection}{\numberline {4.6.1}Motivation}{11}{subsubsection.4.6.1}%
 \contentsline {subsubsection}{\numberline {4.6.2}Shrinkage Formula}{11}{subsubsection.4.6.2}%
-\contentsline {section}{\numberline {5}Modeling Approach 2: Advanced Ensemble (Short Notebook 2)}{12}{section.5}%
+\contentsline {section}{\numberline {5}Modeling Approach 2: Advanced Ensemble (Short Notebook 2+Rolling)}{12}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Enhanced Feature Engineering}{12}{subsection.5.1}%
 \contentsline {subsubsection}{\numberline {5.1.1}Advanced Temporal Features}{12}{subsubsection.5.1.1}%
 \contentsline {paragraph}{1. Fourier Features.}{12}{section*.9}%
@@ -68,8 +68,8 @@
 \contentsline {subsection}{\numberline {6.4}Validation Visualization}{19}{subsection.6.4}%
 \contentsline {section}{\numberline {7}Results and Evaluation}{19}{section.7}%
 \contentsline {subsection}{\numberline {7.1}Comparative Performance Analysis}{19}{subsection.7.1}%
-\contentsline {subsubsection}{\numberline {7.1.1}Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{19}{subsubsection.7.1.1}%
-\contentsline {subsubsection}{\numberline {7.1.2}Approach 2: Ensemble with Advanced Features (Short Notebook 2)}{20}{subsubsection.7.1.2}%
+\contentsline {subsubsection}{\numberline {7.1.1}Approach 1: Material-Specific Recursive Forecasting (Short Notebook 1)}{20}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}Approach 2: Ensemble with Advanced Features (Short Notebook 2+Rolling)}{20}{subsubsection.7.1.2}%
 \contentsline {subsection}{\numberline {7.2}Kaggle Leaderboard Performance}{21}{subsection.7.2}%
 \contentsline {subsection}{\numberline {7.3}Computational Efficiency}{22}{subsection.7.3}%
 \contentsline {section}{\numberline {8}Strengths, Limitations, and Future Improvements}{22}{section.8}%

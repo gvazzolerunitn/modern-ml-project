@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex /Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report"] 1762705126.90534 "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.bbl" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report" 1762705198.29947 0
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" 1762705197.90264 16971 c57f916217f7fc7ba2795fff0fe21276 "pdflatex"
+["bibtex /Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report"] 1762705911.42238 "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.bbl" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report" 1762705972.24477 0
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" 1762705971.92185 17003 94ffa789c8cbb99706ed92a49c558417 "pdflatex"
   "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/references.bib" 1762635118.18653 5135 53731224a036291c995c62e6ab1c1851 ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   (generated)
   "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.bbl"
   "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.blg"
   (rewritten before read)
-["pdflatex"] 1762705197.13944 "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.tex" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.pdf" "Report" 1762705198.29963 0
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" 1762705197.90264 16971 c57f916217f7fc7ba2795fff0fe21276 "pdflatex"
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.bbl" 1762705127.00577 1823 781947b22bd19f6fc194168d684a424f "bibtex /Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report"
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.out" 1762705197.9041 13008 d5d203c5f7d43db4436d278707b45f44 "pdflatex"
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.tex" 1762705196.90278 64839 4a6b469ce61a3706a859dccc75d29405 ""
-  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.toc" 1762705197.90436 7947 01757ad14e048e2b7c689e45b9320449 "pdflatex"
+["pdflatex"] 1762705971.12639 "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.tex" "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.pdf" "Report" 1762705972.24495 0
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.aux" 1762705971.92185 17003 94ffa789c8cbb99706ed92a49c558417 "pdflatex"
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.bbl" 1762705911.52181 1823 781947b22bd19f6fc194168d684a424f "bibtex /Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report"
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.out" 1762705971.9239 13088 7483152e6229db30fd55d08684c82022 "pdflatex"
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.tex" 1762705970.93799 65069 5f69ddadcafc2ad5f216898c8c0a5130 ""
+  "/Users/marcoprosperi/Desktop/Università/Magistrale/Semester III (NTNU)/Modern ML in Practice/modern-ml-project/Report.toc" 1762705971.92419 7963 0c5eb153adecf66191e22e9cf90f0dcb "pdflatex"
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
